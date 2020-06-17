@@ -24,5 +24,5 @@
 
 <!-- - [实现一个 promise(一)](</js/实现promise(-).md>) -->
 - [this 的指向剖析](/js/this的指向剖析.md)
-- [闭包的理解](/js/闭包的理解.md)
+- [闭包的理解](/js/闭包的理解.md) 待更新
 - [script的位置](/js/script的位置.md)
