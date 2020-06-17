@@ -35,8 +35,8 @@
 <html>
 <p>从上面两个流程图我们可以看出来，浏览器渲染的流程如下：</p>
 <p>HTML 解析文件，生成 DOMTree，解析 CSS 文件生成CSSOMTree </p> 
-<p>将DomTree和CSSOMTree结合生成 Render</p>
-<p>Tree(渲染树) 根据 Render Tree 渲染绘制，将像素渲染到屏幕上。<p>
+<p>将DomTree和CSSOMTree结合生成 RenderTree(渲染树)</p>
+<p>根据RenderTree渲染绘制，将像素渲染到屏幕上。<p>
 <p>从流程我们可以看出来 DOM 解析和 CSS 解析是两个并行的进程，所以这也解释了为什么
 CSS 加载不会阻塞 DOM 的解析。</p> <p>然而，由于 Render Tree 是依赖于 DOM Tree 和 CSSOMTree 的，所以他必须等待到 CSSOM Tree 构建完成，也就是 CSS 资源加载完成(或者 CSS
 资源加载失败)后，才能开始渲染。因此，CSS 加载是会阻塞 Dom 的渲染的。</p> <p>由于 js可能会操作之前的 Dom 节点和 css 样式，因此浏览器会维持 html 中 css 和 js
