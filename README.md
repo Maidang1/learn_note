@@ -20,7 +20,7 @@
 | 11 | 3D数学基础：图形与游戏开发 | 0% |
 | 12 | Node.js区块链开发 | 0% |
 
-### js 篇
+### javascript 篇
 
 <!-- - [实现一个 promise(一)](</js/实现promise(-).md>) -->
 - [this 的指向剖析](/js/this的指向剖析.md)

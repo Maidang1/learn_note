@@ -1,4 +1,12 @@
-###### script 的位置
+### script标签的属性
+
++ async（optional） 立即下载脚本，但是不能妨碍其他资源的下载或加载其他的脚本
++ defer (optional) 可以延迟到文档被完全解析后执行，
+
+
+
+#### script 的位置
+
 
 ```html
 <!DOCTYPE html>
@@ -55,4 +63,8 @@ css、js、图片视频等。</p>
 </div>
 </html>
 
-[参考](https://www.ucloud.cn/yun/53185.html)
+[参考文章](https://www.ucloud.cn/yun/53185.html)
+
+
+
+
