@@ -39,10 +39,29 @@
 + 目前的架构
 ![](/img/chrome_lastest架构.png)
 
-+ 浏览器进程：负责界面展示，用户交互，子进程管理，存储服务
-+ 渲染进程：将HTML，CSS，Javascript转换成网页，排版引擎和V8运行在在其中，处于安全考虑，运行在沙箱中
-+ GPU进程： chrome UI 界面的绘制
-+ 网络进程: 负责网络的加载
-+ 插件进程：负责插件的运行
++ 浏览器进程(Browser Process)：负责界面展示，用户交互，子进程管理，存储服务
++ 渲染进程(Render Process )：将HTML，CSS，Javascript转换成网页，排版引擎和V8运行在在其中，处于安全考虑，运行在沙箱中
++ GPU进程(GPU Process)： chrome UI 界面的绘制
++ 网络进程(Internet Process): 负责网络的加载
++ 插件进程(Plugin Process)：负责插件的运行
 
-这样我们就知道了为啥有4个进程
+首先我们浏览一个网页的时候，我们就会在导航栏里输入一个URL, Browser Process向这个URL发送请求获取HTML内容，返回后送给Render Process。遇到网络资源，Internet Process 加载然后返回给Browser加载，同时通知Browser Process。需要Plugin Process的 执行插件的代码。解析完成后，Render Process交给GPU Process。转化成图像
+
+
+###### 浏览器的进程模式
+
+Process-per-site-instance(default) -同一个site-instance使用一个进程
+Process-per-site - 同一个site使用一个进程
+Process-per-tab - 每个tab使用一个进程
+Single Process - 所有的tab使用一个进程
+
++ site 相同而注册域名
++ site-instace 是一组 connected（can obtain references to each other in script code） pages from the same site 例如 <a target="_blank"> js打开新的界面
++ Process-per-site，当你打开 a.baidu.com 页面，在打开 b.baidu.com 的页面，这两个页面的tab使用的是共一个进程，因为这两个页面的site相同，而如此一来，如果其中一个tab崩溃了，而另一个tab也会崩溃。
+
++ Process-per-site-instance 是最重要的，因为这个是 Chrome 默认使用的模式，也就是几乎所有的用户都在用的模式。当你打开一个 tab 访问 a.baidu.com ，然后再打开一个 tab 访问 b.baidu.com，这两个 tab 会使用两个进程。而如果你在 a.baidu.com 中，通过JS代码打开了 b.baidu.com 页面，这两个 tab 会使用同一个进程。
+
+###### 为啥使用Process-per-site-instance
+
++ 相比于 Process-per-tab，能够少开很多进程，就意味着更少的内存占用
++ Process-per-site，能够更好的隔离相同域名下毫无关联的 tab，更加安全
