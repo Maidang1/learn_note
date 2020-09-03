@@ -26,6 +26,7 @@
 - [this 的指向剖析](/js/this的指向剖析.md)
 - [闭包的理解](/js/闭包的理解.md) 待更新
 - [script的位置](/js/script的位置.md)
+- [Pormise题目](/js/promise.md)
 
 ### 流览器篇
 - [chrome浏览器的进程](/浏览器/chrome浏览器的进程.md)
