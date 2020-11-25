@@ -58,3 +58,49 @@ function getKthElement(nums1, nums2, k) {
 
 
 
+## 5. 最长回文子串
+
++ 描述
+
+  > 给定一个字符串 `s`，找到 `s` 中最长的回文子串。你可以假设 `s` 的最大长度为 1000
+
++ 解答(简单的动态规划)
+
+```javascript
+
+/*
+	s[i+1][j-1] && s[i] === s[j] ===> s[i][j]
+*/
+
+var longestPalindrome = function (s) {
+  var n = s.length;
+  var dp = new Array(n).fill(false);
+  var ans = ''
+  for (let i = 0; i < n; i++) {
+    dp[i] = new Array(n).fill(false);
+  }
+
+  for (let len = 0; len < n; len++) {
+    for (let i = 0; i + len < n; i++) {
+      let j = i + len;
+      if (len === 0) {
+        dp[i][j] = true;
+      }
+      else if (len === 1) {
+        dp[i][j] = (s.charAt(i) === s.charAt(j));
+      }
+      else {
+        dp[i][j] = (dp[i + 1][j - 1] && s[i] === s[j]);
+      }
+
+      if (dp[i][j] && ans.length < (len + 1)) {
+        ans = s.substring(i, i + len + 1)
+      }
+    }
+  }
+  return ans;
+
+};
+
+```
+
