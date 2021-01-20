@@ -1,8 +1,8 @@
 ### ts 实现的简单的依赖注入
 
 ```typescript
-import "reflect-metadata";
-import { parseScript } from "esprima";
+import 'reflect-metadata';
+import { parseScript } from 'esprima';
 interface IIdexService {
   log(str: string): void;
 }
@@ -18,8 +18,8 @@ interface IType {
 }
 
 const Types: IType = {
-  indexServer: Symbol.for("indexServer"),
-  indexServer2: Symbol.for("indexServer2"),
+  indexServer: Symbol.for('indexServer'),
+  indexServer2: Symbol.for('indexServer2'),
 };
 
 function hasKey<O extends Object>(obj: O, key: keyof any): key is keyof O {
@@ -42,12 +42,12 @@ function getParams(fn: Function) {
   let ast = parseScript(fn.toString());
   let funParams: any[] = [];
   let node = ast.body[0];
-  if (node.type === "FunctionDeclaration") {
+  if (node.type === 'FunctionDeclaration') {
     funParams = node.params;
   }
   let validParam: string[] = [];
   funParams.forEach((obj) => {
-    if (obj.type === "Identifier") {
+    if (obj.type === 'Identifier') {
       validParam.push(obj.name);
     }
   });
@@ -77,7 +77,7 @@ class IndexController {
     this.indexServer = indexServer;
   }
   info() {
-    this.indexServer.log("这是注入后的结果");
+    this.indexServer.log('这是注入后的结果');
   }
 }
 
