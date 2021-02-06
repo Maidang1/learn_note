@@ -71,3 +71,202 @@ var res = arr.each(function(item, index){
 console.log(res)
 ```
 
+
+
+## add(1)(2)
+
+```javascript
+let obj = {
+  name: "OBJ",
+};
+
+function fn(...args) {
+  console.log(this, args);
+}
+
+document.body.onclick = fn; // =>this BODY
+
+document.body.onclick = function (ev) {
+  // ev事件对象 函数触发的时候 会把信息传给函数
+};
+
+document.body.onclick = fn.bind(obj, 100, 200);
+
+document.body.onclick = function (ev) {
+  fn.call(obj, 100, 200, ev);
+};
+
+(function () {
+  function myBInd(context = window, ...outArg) {
+    let fn = this;
+    return function (...innerArg) {
+      fn.call(context, ...outArg.concat(innerArg));
+    };
+  }
+
+  Function.prototype.myBInd = myBInd;
+})();
+
+// 闭包 保存和保护
+```
+
+
+
+```javascript
+function currying(fn, length) {
+    length = length || fn.length;
+    return function(...args) {
+        if(args.length >=length) {
+            return fn(...args)
+        }
+        return currying(fn.bind(null, ...args), length - args.length)
+    }
+}
+
+function add(n1, n2, n3) {
+    return n1 + n2 + n3;
+}
+
+add = currying(add, 4);
+```
+
+
+
+## 旋转数组
+
+```javascript
+function roreate(arr, k) {
+    if(k<=0 || k % arr.length === 0) return arr;
+    k = k % arr.length;
+    arr = arr.slice(-k).concat(arr.slice(0, arr.length - k))
+    return arr;
+}
+
+
+function roreate(arr, k) {
+    if(k<=0 || k % arr.length === 0) return arr;
+    k = k % arr.length;
+    return [...arr.splice(arr.length - k), ...arr]
+}
+```
+
+
+
+## 数组
+
+```javascript
+let obj = {
+    2:3,
+    3:4,
+    length:2,
+    push: Array.prototype.push
+}
+
+obj.push(1)
+obj.push(2)
+```
+
+
+
+## == & ===
+
+```javascript
+{} == {} // false 地址比较
+null == undefined // true
+NaN == NaN // false
+[12] == '12' true // 对象和字符串 对象toString()
+// 其他的转化为数字
+// 对象转数字 对象 -----> 字符串----> 数字
+// undefined NaN
+```
+
+
+
+```javascript
+var a = {
+    n: 0,
+    toString:function() {
+        return ++this.n
+    }
+}
+
+Object.defineProperty(window, "a", {
+    get: function() {
+        console.log(this)
+        this.value ? this.value ++: this.value = 1;
+        return this.value
+    }
+})
+
+if(a == 1 && a == 2 && a == 3) {
+    console.log(1)
+}
+```
+
+
+
+
+
+```javascript
+let fn = function AAA() {
+    console.log(AAA) //OK
+    // AAA 不可以修改类似于 常量
+}
+// AAA() AAA is not defined
+
+
+var b = 10;
+(function b() {
+    b = 20;
+    console.log(b) // function
+})()
+console.log(b) // 10
+
+
+var b = 10;
+
+(function b(/* b */){
+    var b = 20;
+    console.log(b) // 20
+})()
+console.log(b) // 10
+
+```
+
+
+
+```javascript
+for(var i = 0; i < 10; i++) {
+    setTimeout(()=>{
+        console.log(i)
+    }, 100)/ 10
+}
+```
+
+
+
+
+
+```javascript
+function _new(fn, ...args) {
+    let obj = {};
+    obj.__proto__ = Fn.prototype;
+    let res = fn.call(obj, ...args);
+    return obj;
+    
+}
+```
+
+
+
+```javascript
+// 扁平化
+arr = arr.toString().split(',').map(item => Number(item))
+arr = arr.flat()
+
+while(arr.some(item => Array.isArray(item))) {
+    arr = [].concat(...arr);
+}
+
+```
+
