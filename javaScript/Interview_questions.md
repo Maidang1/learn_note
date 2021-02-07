@@ -345,3 +345,422 @@ $(window).on("load, scroll", function () {
 
 ```
 
+
+
+## call 实现
+
+```javascript
+Function.prototype.call = function (context) {
+  context = context ? Object(context) : window;
+  context.fn = this;
+  let args = [];
+  for (let i = 1; i < arguments.length; i++) {
+    args.push("arguments[" + i + "]");
+  }
+  let r = eval("context.fn(" + args + ")");
+  delete context.fn;
+  return r;
+};
+
+```
+
+
+
+## apply
+
+```javascript
+Function.prototype.apply = function (context, args) {
+  context = context ? Object(context) : window;
+  context.fn = this;
+  if (!args) {
+    return context.fn();
+  }
+  let r = eval("context.fn(" + args + ")");
+  delete context.fn;
+  return r;
+};
+```
+
+
+
+## new实现
+
+```javascript
+function mockNew() {
+  let Constructor = [].shift.call(arguments);
+  let obj = {};
+  obj.__proto__ = Constructor.prototype;
+  let res = Constructor.apply(obj, arguments);
+  return res instanceof Object ? res : obj;
+}
+```
+
+
+
+## bind
+
+```javascript
+// bind可以绑定this执行
+// 返回新的函数
+// 如果绑定的函数被new了 当前函数的this就是当前函数的实例
+
+Function.prototype.bind = function (context) {
+  let that = this;
+  let bindArgs = Array.prototype.slice.call(arguments, 1);
+  function fn() {} // Object.create() 原理
+  Fn.prototype = this.prototype;
+  fBound.prototype = new Fn();
+  return function fBound() {
+    let args = Array.prototype.slice.call(arguments);
+    return that.apply(
+      this instanceof fBound ? this : context,
+      bindArgs.concat(args)
+    );
+  };
+};
+
+```
+
+
+
+## 0.1 + 0.2 != 0.3
+
+> 进制转化
+>
+> 0.1 * 2 = 0.2
+>
+> 0.2 * 2 = 0.4
+>
+> 0.4 * 2 = 0.8
+>
+> 0.8 * 2 = 1.6 - 1 = 0.6
+>
+> 
+
+
+
+## instanceof
+
+```javascript
+function instanceOf(A, B) {
+    B = B.prototype
+    A = A.__proto__
+    while(true) {
+        if(A === null) {
+            return false
+        }
+        if(A === B) {
+            return true
+        }
+        A = A.__proto__
+    }
+}
+
+// instanceof 不能校验原始类型
+
+class ValidataStr {
+    static [Symbol.hasInstance](x) {
+        return typeof x === 'string'
+    }
+}
+```
+
+
+
+## 执行上下文栈和作用域链
+
+```javascript
+function a() {}
+function b() {}
+function c() {
+    console.log("welcome")
+}
+a()
+
+/*
+ESC = [
+	globalContext
+]
+ESC.push(functionAContext)
+ESC.push(functionBContext)
+ESC.push(functionCContext)
+ESC.pop()
+*/
+
+/*
+	作用域链
+	[[scope]]
+	
+a.[[scope]] = {
+	globalContext.VO
+}
+b.[[scope]] = {
+	aContext.AO
+	globalContext.VO
+}
+c.[[scope]] = {
+	bContext.AO
+	aContext.AO
+	globalContext.VO
+}
+
+*/
+
+var a = 1;
+function sum() {
+    var b = 2;
+    return a + b;
+}
+
+sum()
+
+/*
+	sum.[[scope]] = {
+		globalContext.VO
+	}
+	ESC = [
+		globalContext;
+		sumContext
+	]
+	sumContext = {
+		AO: {
+			arguments: {
+				length: 0
+			}
+			b: undefined
+		}
+		Scope:[AO, sum.[[scope]]]
+	}
+	
+	AO: {
+		arguments: {
+				length: 0
+			}
+			b: 2
+	}
+	
+	ECS.pop()
+*/
+```
+
+
+
+## 变量提升
+
+```javascript
+/*
+	js作用域 今静态的 定义的时候产生
+	执行上下文 EC
+	全局上下文 和 函数上下文
+	
+	变量对象 Variabl objecct VO 作用域链 this
+
+*/
+
+var a  = 100;
+function sum() {
+    
+}
+
+
+/*
+	VO(globalContext) {
+		a: 100,
+		sum: ref to function sum
+	}
+*/
+
+
+/*
+	执行上下文周期 创建阶段 代码执行阶段
+	 VO ===>  AO
+*/
+
+
+function sum(a, b) {
+    var c = 10;
+    var d = function() {}
+    function total() {}
+    b = 10;
+} 
+
+sum(10)
+
+/*
+	1. 找形参 没有实参 就用undefined代替 
+	2. 找函数声明(function xxx() {})
+*/
+
+/*
+	vo(sum) { 创建阶段
+		a: 10,
+		b: undefined,
+		total: ref to function total 后面会覆盖前面的
+		d: undefined
+	}
+*/
+
+```
+
+
+
+## 类型转换
+
+```javascript
+let obj = {
+    
+    [Symbol.toPrimitive]() {
+        
+    },
+    valueOf() {
+        
+    },
+    toString() {
+        
+    }
+}
+```
+
+
+
+## 比较运算
+
+```javascript
+'a' < 'b' // ascii
+1 < '123' // String ----> Number 不能变成数字就会false
+
+// == 
+null == undefined // true
+// null 和 undefined  和其他比较的时候都是false
+
+// 对象和对象比较都是false 地址空间转化
+NaN == NaN //false
+
+
+// 优先级
+// 单目运算符优先级高
+[] == ![] ==> [] == false ==> [] == 0 ==> [].valueOf() ===> [].toString() ==> '' == 0 ==> 0 == 0 // true
+```
+
+
+
+## 深拷贝和浅拷贝
+
+```javascript
+function deepClone(obj, hash = new WeakMap) {
+    if(obj == null) return obj;
+    
+    if(obj instanceof Date) return new Date(obj);
+    if(obj instanceof RegExp) return RegExp(obj);
+    
+    if(typeof obj !== 'object') return obj;
+    
+    if(hash.get(obj)) return hash.get(obj); // 解决循环引用
+    // [] {} 
+    let cloneObj = new obj.constructor;
+    hash.set(obj, cloneObj)
+    for(let key in obj) {
+        if(obj.hasOwnProperty(key)) {
+            cloneObj[key] = deepClone(obj[key], hash)
+        }
+    }
+    
+    return cloneObj
+}
+```
+
+
+
+## 原型和原型链
+
+```javascript
+/*
+	函数有prototype
+	对象有__proto__
+*/
+```
+
+
+
+## 数据类型检测
+
+```javascript
+/*
+	Number Boolean Bigint undefined null Object Symbol 
+*/
+
+/******************  typeof  *********************/
+function func(n, m, cb) {
+    // 默认值
+    typeof m === 'undefined'? m = 0 : null
+    n === undefined? n = 0 : null
+    typeof cb === 'function' ? cb() : null // 严谨
+}
+
+
+function (10, 20, function anonymous(){})
+
+/******************  isntanceof  *********************/
+let arr = [],
+    reg = /^$/;
+arr instanceof Array
+
+/********************** 问题 **********************/
+/*
+	1. 不能处理基本的数据类型
+	2. 只要在原型链上都行
+*/
+
+
+
+/******************  构造函数  *********************/
+
+/*
+	在类的原型链上都会有constructor属性 存储类
+*/
+let n = 12;
+n.constructor === Number
+arr.constructor === Array
+obj.constructor === Object
+
+
+
+/******************  Object.prototype.toString.call()  *********************/
+
+```
+
+
+
+## 封装类型检测的库
+
+```javascript
+let _obj = {
+    isNumber: "Number",
+    isFunction: "Function",
+    isWindow: "Window",
+    isBoolean: "Boolean",
+    isString: "String",
+    isNull: "Null",
+    isUndefined: "Undefined",
+    isSymbol: "Symbol",
+    isPlainObject: "Object",
+    isArray: "Array",
+    isReg: "RegExp",
+    isDate: "Date",
+  },
+  _tostring = obj.tostring,
+  _type = {};
+
+for (var key in obj) {
+  if (!_obj.hasOwnProperty(key)) break;
+  _type[key] = (function () {
+      // 闭包
+    var reg = new RegExp("\\[object " + _obj[key] + " \\]");
+    return function (value) {
+      return reg.test(_tostring.call(val));
+    };
+  })();
+}
+
+```
+
