@@ -270,3 +270,78 @@ while(arr.some(item => Array.isArray(item))) {
 
 ```
 
+
+
+```javascript
+reg = /\b[a-z]\b/ig
+str = str.replace(reg, value => {
+    return ' ' + value + ' '
+}).trim()
+```
+
+
+
+```javascript
+/*
+	实现一个$attr(name, value)
+	属性为name
+	值为value的元素集合
+*/
+let ary = $attr('class', 'box')
+function $attr(property, value) {
+    let elements = document.getElementsByTagName('*'),
+        arr = [];
+    
+    [].forEach.call(elements, item => {
+        let itemValue = item.getAttribute(property);
+        if(property === 'class') {
+            
+            new RegExp('\\b + value + \\b').test(itemValue)?arr.push(item):null
+            return 
+        }
+        if(value === itemValue) {
+            arr.push(item)
+        }
+    })
+    return arr;
+}
+
+```
+
+
+
+
+
+```html
+<div class="imgBox">
+    <img src="" data-img="XXXX"/>
+</div>
+```
+
+
+
+```javascript
+/* 代码实现图片懒加载 */
+
+let $imgBox = $("imgBox"),
+  $img = $imgBox.children("img"),
+  $window = $(window);
+$(window).on("load, scroll", function () {
+  if ($img.attr("isLoad") === "TRUE") {
+    return;
+  }
+  let $A = $imgBox.outerHeight() + $imgBox.offset().top,
+    $B = $window.outerHeight() + $window.scrollTop();
+
+  if ($A <= $B) {
+    $img.attr("src", img.attr("data-img"));
+    $img.on("load", function () {
+      $img.css("display", "block");
+    });
+  }
+  $img.attr("isLoad", "TRUE");
+});
+
+
+```
+
