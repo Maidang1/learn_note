@@ -49,6 +49,16 @@ function error(message: string): never {
 
 var strLen: number = (<string>someValue).length;
 var strLen: number = (someValue as string).length;
+
+/*
+    布尔类型：boolean
+    数值类型：number
+    字符串类型：string
+    数组：Array<type>或type[]
+    对象类型：object
+    Symbol类型：symbol
+    null和undefined：null 和 undefined，这个比较特殊，它们自身即是类型
+*/
 ```
 
 
