@@ -212,3 +212,52 @@ let children = (function (parent) {
 
 ```
 
+
+
+## 遍历
+
+```javascript
+// for循环
+// forEach
+// every
+// for in 
+// for of
+```
+
+
+
+```javascript
+const price = {
+    A:[1.5,2.3],
+    B:[3,4,5],
+    C:[0.5, 1.0]
+}
+
+```
+
+
+
+```javascript
+let args = [].slice.call(arguments)
+Array.from(arguments, mapFn, thisArg)
+
+// 伪数组 存储数据索引方式 有何lebgth属性
+let arr = Array.form({length:5}, ()=>{
+    return 1
+})
+
+```
+
+
+
+```javascript
+let arr = Array.of(1,2,3,4,5);
+arr//[1,2,3,4,5]
+
+
+let arr = new Array(5).fill(1)
+arr // [1,1,1,1,1];
+// Array.fill(value, start, end)
+
+```
+
