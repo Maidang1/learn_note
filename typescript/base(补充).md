@@ -58,3 +58,111 @@ console.log(obj[key2]); // error
 > const enum*(完全嵌入的枚举)*，在之前讲的定义枚举的语句之前加上`const`关键字，这样编译后的代码不会创建这个对象，只是会从枚举里拿到相应的值进行替换
 
 > 当 TypeScript 不确定一个联合类型的变量到底是哪个类型的时候，我们只能访问此联合类型的所有类型里共有的属性或方法
+
+
+
+## 接口使用
+
+```typescript
+/* 索引接口 */
+interface RoleDic {
+  [id: number]: string;
+}
+const role1: RoleDic = {
+  0: 'super_admin',
+  1: 'admin',
+};
+const role2: RoleDic = {
+  s: 'super_admin', // error 不能将类型"{ s: string; a: string; }"分配给类型"RoleDic"。
+  a: 'admin',
+};
+const role3: RoleDic = ['super_admin', 'admin'];
+
+
+/* readonly 属性 */
+interface RoleDic {
+  readonly [id: number]: string;
+}
+
+/* 混合接口类型 */
+interface Counter {
+  (): void;
+  count: number;
+}
+const gerCounter = (): Counter => {
+  const c = () => {
+    c.count++;
+  };
+  c.count = 0;
+  return c;
+};
+
+/* 接口类型 */
+interface Vegetables {
+  color: string;
+}
+interface Food {
+  type: string;
+}
+interface Tomato extends Food, Vegetables {
+  radius: number;
+}
+```
+
+
+
+## 函数
+
+```typescript
+interface Add {
+  (x: string, y: string): string;
+}
+/*
+	type Add = (x: number, y: number) => number;
+*/
+
+let add: Add = (a, b) => a + b;
+
+```
+
+
+
+## 泛型
+
+```typescript
+interface GetArray<T> {
+  (arg: T, times: number): T[];
+  tag: T;
+}
+
+const getArr = (): GetArray<number> => {
+  const c = (arg: number, times: number) => {
+    return new Array(times).fill(arg);
+  };
+  c.tag = 1;
+
+  return c;
+};
+
+/* 泛型约束 */
+interface ValueWithLength {
+  length: number;
+}
+const getLength = <T extends ValueWithLength>(param: T): number => {
+  return param.length;
+};
+
+getLength("abc"); // 3
+getLength([1, 2, 3]); // 3
+getLength({ length: 3 }); // 3
+getLength(123); // error 类型“123”的参数不能赋给类型“ValueWithLength”的参数
+
+
+
+/* 类型参数 */
+const getProp = <T, K extends keyof T>(obj: T, prop: K) => {
+  return obj[prop];
+};
+
+```
+
