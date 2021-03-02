@@ -1,6 +1,6 @@
 ## 生命周期(老版)
 
-![5287253-315eac1c26082f08](../img/5287253-315eac1c26082f08.webp)
+![5287253-315eac1c26082f08](/img/5287253-315eac1c26082f08.webp)
 
 ```javascript
 import React, { Component } from 'react';
@@ -78,7 +78,7 @@ class Sub extends Component {
 
 ## 生命周期新版
 
-![5287253-19b835e6e7802233](../img/5287253-19b835e6e7802233.webp)
+![5287253-19b835e6e7802233](/img/5287253-19b835e6e7802233.webp)
 
 
 
