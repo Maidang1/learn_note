@@ -14,7 +14,7 @@
 ## Vue
 
 - [Vue 数据监控原理](./Vue/observer.md)
-- [Vue 基础](./Vue/observer.md)
+- [Vue 基础](./Vue/base.md)
 
 ## 持续集成
 
