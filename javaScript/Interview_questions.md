@@ -387,6 +387,7 @@ Function.prototype.apply = function (context, args) {
 
 ```javascript
 function mockNew() {
+    // 拿到构造函数就是传进来的一个函数
   let Constructor = [].shift.call(arguments);
   let obj = {};
   obj.__proto__ = Constructor.prototype;
@@ -407,12 +408,13 @@ function mockNew() {
 Function.prototype.bind = function (context) {
   let that = this;
   let bindArgs = Array.prototype.slice.call(arguments, 1);
-  function fn() {} // Object.create() 原理
+  function Fn() {} // Object.create() 原理
   Fn.prototype = this.prototype;
   fBound.prototype = new Fn();
   return function fBound() {
     let args = Array.prototype.slice.call(arguments);
     return that.apply(
+        // 判断是不是new出来的 如果是new出来的 this应该指向new出来的对象
       this instanceof fBound ? this : context,
       bindArgs.concat(args)
     );
